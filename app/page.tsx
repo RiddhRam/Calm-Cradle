@@ -19,6 +19,7 @@ type TimelineEntry = {
   title: string;
   note: string;
   observedAt: string;
+  intensity: "mild" | "moderate" | "significant";
   icon: string;
   tone: "sage" | "peach" | "blue" | "yellow";
   media: MediaItem[];
@@ -90,6 +91,7 @@ const sampleTimeline: TimelineEntry[] = [
     title: "Morning bottle",
     note: "Finished her usual 120 mL bottle. Alert and smiling afterward.",
     observedAt: "2026-07-26T07:40:00",
+    intensity: "mild",
     icon: "◇",
     tone: "sage",
     media: [],
@@ -100,6 +102,7 @@ const sampleTimeline: TimelineEntry[] = [
     title: "Skin redness",
     note: "Small pink patch on her left cheek after her nap. It has not spread and does not seem to bother her.",
     observedAt: "2026-07-25T20:15:00",
+    intensity: "moderate",
     icon: "✦",
     tone: "peach",
     media: [],
@@ -110,6 +113,7 @@ const sampleTimeline: TimelineEntry[] = [
     title: "Temperature check",
     note: "37.4°C measured underarm. Feeding normally and six wet diapers today.",
     observedAt: "2026-07-24T19:30:00",
+    intensity: "mild",
     icon: "°",
     tone: "yellow",
     media: [],
@@ -120,6 +124,7 @@ const sampleTimeline: TimelineEntry[] = [
     title: "Longer afternoon nap",
     note: "Slept 25 minutes longer than usual, then woke easily and was playful.",
     observedAt: "2026-07-22T15:10:00",
+    intensity: "mild",
     icon: "☾",
     tone: "blue",
     media: [],
@@ -365,6 +370,8 @@ export default function Home() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [urgencyResult, setUrgencyResult] = useState<Urgency | null>(null);
   const [timelineFilter, setTimelineFilter] = useState("All");
+  const [timelineRange, setTimelineRange] = useState<"7" | "30" | "all">("7");
+  const [selectedEntryId, setSelectedEntryId] = useState("sample-feeding");
   const [forumFilter, setForumFilter] = useState("All");
   const [forumSearch, setForumSearch] = useState("");
   const [newPostOpen, setNewPostOpen] = useState(false);
@@ -379,7 +386,13 @@ export default function Home() {
   useEffect(() => {
     readStoredData()
       .then((stored) => {
-        if (stored) setData({ ...stored, forumPosts: stored.forumPosts ?? sampleForumPosts });
+        if (stored) {
+          setData({
+            ...stored,
+            timeline: stored.timeline.map((entry) => ({ ...entry, intensity: entry.intensity ?? (entry.id === "sample-rash" ? "moderate" : "mild") })),
+            forumPosts: stored.forumPosts ?? sampleForumPosts,
+          });
+        }
         else return writeStoredData(fallbackData);
       })
       .finally(() => setHydrated(true));
@@ -405,6 +418,8 @@ export default function Home() {
     timelineFilter === "All"
       ? data.timeline
       : data.timeline.filter((entry) => entry.category === timelineFilter);
+  const selectedTimelineEntry =
+    visibleTimeline.find((entry) => entry.id === selectedEntryId) ?? visibleTimeline[0];
   const visibleForumPosts = data.forumPosts.filter((post) => {
     const matchesTopic = forumFilter === "All" || post.topic === forumFilter;
     const query = forumSearch.trim().toLowerCase();
@@ -438,11 +453,13 @@ export default function Home() {
       title,
       note,
       observedAt: String(form.get("observedAt")) || new Date().toISOString(),
+      intensity: String(form.get("intensity")) as TimelineEntry["intensity"],
       icon: meta.icon,
       tone: meta.tone,
       media,
     };
     setData((current) => ({ ...current, timeline: [entry, ...current.timeline] }));
+    setSelectedEntryId(entry.id);
     setLogOpen(false);
     setToast("Symptom update saved to Mila’s timeline.");
     event.currentTarget.reset();
@@ -720,16 +737,31 @@ export default function Home() {
           {activeTab === "timeline" && (
             <section className="page-panel">
               <div className="page-title-row">
-                <div><p className="eyebrow">SYMPTOM HISTORY</p><h1>Mila’s timeline</h1><p>One calm, chronological view of symptoms, routines, and changes.</p></div>
+                <div><p className="eyebrow">SYMPTOM HISTORY</p><h1>Mila’s timeline</h1><p>See when symptoms appeared, how noticeable they felt, and what changed over time.</p></div>
                 <button className="primary-button" onClick={() => setLogOpen(true)}><span>＋</span> Add an update</button>
               </div>
-              <div className="filter-row" aria-label="Filter timeline">
-                {["All", "Fever", "Rash or skin change", "Feeding concern", "Sleep or behavior change"].map((filter) => (
-                  <button key={filter} className={timelineFilter === filter ? "active" : ""} onClick={() => setTimelineFilter(filter)}>{filter === "Rash or skin change" ? "Skin" : filter === "Feeding concern" ? "Feeding" : filter === "Sleep or behavior change" ? "Sleep" : filter}</button>
-                ))}
+              <div className="timeline-toolbar">
+                <div className="filter-row" aria-label="Filter timeline">
+                  {["All", "Fever", "Rash or skin change", "Feeding concern", "Sleep or behavior change"].map((filter) => (
+                    <button key={filter} className={timelineFilter === filter ? "active" : ""} onClick={() => { setTimelineFilter(filter); const next = filter === "All" ? data.timeline[0] : data.timeline.find((entry) => entry.category === filter); if (next) setSelectedEntryId(next.id); }}>{filter === "Rash or skin change" ? "Skin" : filter === "Feeding concern" ? "Feeding" : filter === "Sleep or behavior change" ? "Sleep" : filter}</button>
+                  ))}
+                </div>
+                <div className="range-toggle" aria-label="Timeline date range">
+                  <button className={timelineRange === "7" ? "active" : ""} onClick={() => { setTimelineRange("7"); if (visibleTimeline[0]) setSelectedEntryId(visibleTimeline[0].id); }}>7 days</button>
+                  <button className={timelineRange === "30" ? "active" : ""} onClick={() => { setTimelineRange("30"); if (visibleTimeline[0]) setSelectedEntryId(visibleTimeline[0].id); }}>30 days</button>
+                  <button className={timelineRange === "all" ? "active" : ""} onClick={() => { setTimelineRange("all"); if (visibleTimeline[0]) setSelectedEntryId(visibleTimeline[0].id); }}>All</button>
+                </div>
               </div>
               {visibleTimeline.length ? (
-                <div className="timeline-list">{visibleTimeline.map((entry) => <TimelineCard key={entry.id} entry={entry} expanded />)}</div>
+                <>
+                  <SymptomGraph entries={visibleTimeline} range={timelineRange} selectedId={selectedTimelineEntry?.id} onSelect={setSelectedEntryId} />
+                  {selectedTimelineEntry && (
+                    <div className="selected-update">
+                      <div className="selected-update-heading"><div><p className="eyebrow">SELECTED UPDATE</p><h2>{formatEntryDate(selectedTimelineEntry.observedAt)}</h2></div><span>Click another marker to compare</span></div>
+                      <TimelineCard entry={selectedTimelineEntry} expanded />
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="empty-state"><span>♡</span><h2>No updates here yet</h2><p>Add a symptom or observation when you’re ready.</p><button className="primary-button" onClick={() => setLogOpen(true)}>Add first update</button></div>
               )}
@@ -946,6 +978,7 @@ export default function Home() {
               <label>Symptom or observation<select name="category" defaultValue="Rash or skin change">{symptomOptions.map((option) => <option key={option}>{option}</option>)}</select></label>
               <label>Short title<input name="title" placeholder="e.g. Pink patch on cheek" /></label>
               <label>What happened?<textarea name="note" required rows={4} placeholder="Describe what you noticed and how Mila was acting…" /></label>
+              <label>How noticeable was it?<select name="intensity" defaultValue="mild"><option value="mild">Mild</option><option value="moderate">Moderate</option><option value="significant">Significant</option></select></label>
               <label>When did you notice it?<input name="observedAt" type="datetime-local" defaultValue="2026-07-26T09:15" /></label>
               <label className="upload-zone"><span>＋</span><strong>Add photos or videos</strong><small>Images up to 10 MB · videos up to 50 MB</small><input name="media" type="file" accept="image/*,video/*" multiple onChange={validateFiles} /></label>
               <div className="modal-actions"><button type="button" className="text-button" onClick={() => setLogOpen(false)}>Cancel</button><button className="primary-button" type="submit">Save to timeline</button></div>
@@ -1024,12 +1057,98 @@ function NavButton({ active, icon, label, onClick }: { active: boolean; icon: st
   return <button className={`nav-button ${active ? "active" : ""}`} onClick={onClick}><span>{icon}</span><b>{label}</b></button>;
 }
 
+const symptomLanes = [
+  { label: "Temperature", matches: (entry: TimelineEntry) => entry.category === "Fever" },
+  { label: "Skin", matches: (entry: TimelineEntry) => entry.category === "Rash or skin change" },
+  { label: "Feeding", matches: (entry: TimelineEntry) => ["Feeding concern", "Vomiting", "Diarrhea"].includes(entry.category) },
+  { label: "Sleep & behavior", matches: (entry: TimelineEntry) => entry.category === "Sleep or behavior change" },
+  { label: "Breathing", matches: (entry: TimelineEntry) => entry.category === "Cough or breathing" },
+  { label: "Other", matches: (entry: TimelineEntry) => entry.category === "Other" },
+];
+
+function SymptomGraph({
+  entries,
+  range,
+  selectedId,
+  onSelect,
+}: {
+  entries: TimelineEntry[];
+  range: "7" | "30" | "all";
+  selectedId?: string;
+  onSelect: (id: string) => void;
+}) {
+  const end = new Date();
+  end.setHours(23, 59, 59, 999);
+  const earliest = entries.reduce((value, entry) => Math.min(value, new Date(entry.observedAt).getTime()), end.getTime());
+  const start = new Date(range === "all" ? earliest : end.getTime());
+  if (range === "all") {
+    start.setHours(0, 0, 0, 0);
+    if (end.getTime() - start.getTime() < 6 * 86400000) start.setTime(end.getTime() - 6 * 86400000);
+  } else {
+    start.setDate(end.getDate() - (Number(range) - 1));
+    start.setHours(0, 0, 0, 0);
+  }
+  const span = Math.max(1, end.getTime() - start.getTime());
+  const rangeEntries = entries.filter((entry) => {
+    const time = new Date(entry.observedAt).getTime();
+    return time >= start.getTime() && time <= end.getTime();
+  });
+  const lanes = symptomLanes.filter((lane) => rangeEntries.some(lane.matches));
+  const labelCount = range === "7" ? 7 : 6;
+  const dateLabels = Array.from({ length: labelCount }, (_, index) => {
+    const date = new Date(start.getTime() + (span * index) / (labelCount - 1));
+    return date.toLocaleDateString("en-CA", { month: "short", day: "numeric" });
+  });
+
+  return (
+    <div className="symptom-graph">
+      <div className="graph-heading">
+        <div><p className="eyebrow">VISUAL OVERVIEW</p><h2>Patterns at a glance</h2></div>
+        <div className="intensity-legend"><span><i className="mild"></i>Mild</span><span><i className="moderate"></i>Moderate</span><span><i className="significant"></i>Significant</span></div>
+      </div>
+      {rangeEntries.length ? (
+        <div className="graph-scroll">
+          <div className="graph-content">
+            <div className="graph-dates"><span></span>{dateLabels.map((label, index) => <time key={`${label}-${index}`}>{label}</time>)}</div>
+            {lanes.map((lane) => (
+              <div className="graph-lane" key={lane.label}>
+                <strong>{lane.label}</strong>
+                <div className="graph-track">
+                  {rangeEntries.filter(lane.matches).map((entry) => {
+                    const left = ((new Date(entry.observedAt).getTime() - start.getTime()) / span) * 100;
+                    return (
+                      <button
+                        key={entry.id}
+                        className={`graph-marker ${entry.intensity} ${selectedId === entry.id ? "selected" : ""}`}
+                        style={{ left: `${Math.max(1, Math.min(99, left))}%` }}
+                        onClick={() => onSelect(entry.id)}
+                        aria-label={`${entry.title}, ${entry.intensity}, ${formatEntryDate(entry.observedAt)}`}
+                        title={`${entry.title} · ${entry.intensity}`}
+                      >
+                        <span>{entry.icon}</span>
+                        {entry.media.length > 0 && <i aria-label="Has attachment">▧</i>}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="graph-empty"><span>○</span><p>No updates fall within this date range.</p><button onClick={() => onSelect(entries[0].id)}>Show the most recent update below</button></div>
+      )}
+      <p className="graph-note">Marker size reflects how noticeable the caregiver recorded the change—not medical severity.</p>
+    </div>
+  );
+}
+
 function TimelineCard({ entry, expanded = false }: { entry: TimelineEntry; expanded?: boolean }) {
   return (
     <article className="timeline-card">
       <span className={`entry-icon ${entry.tone}`}>{entry.icon}</span>
       <div className="entry-body">
-        <div className="entry-heading"><div><h3>{entry.title}</h3><span>{entry.category}</span></div><time>{formatEntryDate(entry.observedAt)}</time></div>
+        <div className="entry-heading"><div><h3>{entry.title}</h3><div className="entry-tags"><span>{entry.category}</span><span className={`intensity-tag ${entry.intensity}`}>{entry.intensity}</span></div></div><time>{formatEntryDate(entry.observedAt)}</time></div>
         <p>{entry.note}</p>
         {entry.media.length > 0 && <div className={`media-grid ${expanded ? "" : "compact-media"}`}>{entry.media.map((item) => <MediaPreview item={item} key={item.id} />)}</div>}
       </div>
