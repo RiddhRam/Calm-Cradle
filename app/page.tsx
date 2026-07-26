@@ -74,14 +74,14 @@ const symptomOptions = [
 ];
 
 const categoryMeta: Record<string, { icon: string; tone: TimelineEntry["tone"] }> = {
-  Fever: { icon: "°", tone: "peach" },
-  "Cough or breathing": { icon: "≈", tone: "blue" },
-  "Rash or skin change": { icon: "✦", tone: "peach" },
-  Vomiting: { icon: "↗", tone: "yellow" },
-  Diarrhea: { icon: "≋", tone: "yellow" },
-  "Feeding concern": { icon: "◇", tone: "sage" },
+  Fever: { icon: "🌡", tone: "peach" },
+  "Cough or breathing": { icon: "🫁", tone: "blue" },
+  "Rash or skin change": { icon: "🩹", tone: "peach" },
+  Vomiting: { icon: "🤢", tone: "yellow" },
+  Diarrhea: { icon: "💧", tone: "yellow" },
+  "Feeding concern": { icon: "🍼", tone: "sage" },
   "Sleep or behavior change": { icon: "☾", tone: "blue" },
-  Other: { icon: "•", tone: "sage" },
+  Other: { icon: "＋", tone: "sage" },
 };
 
 const sampleTimeline: TimelineEntry[] = [
@@ -92,7 +92,7 @@ const sampleTimeline: TimelineEntry[] = [
     note: "Finished her usual 120 mL bottle. Alert and smiling afterward.",
     observedAt: "2026-07-26T07:40:00",
     intensity: "mild",
-    icon: "◇",
+    icon: "🍼",
     tone: "sage",
     media: [],
   },
@@ -103,7 +103,7 @@ const sampleTimeline: TimelineEntry[] = [
     note: "Small pink patch on her left cheek after her nap. It has not spread and does not seem to bother her.",
     observedAt: "2026-07-25T20:15:00",
     intensity: "moderate",
-    icon: "✦",
+    icon: "🩹",
     tone: "peach",
     media: [],
   },
@@ -114,7 +114,7 @@ const sampleTimeline: TimelineEntry[] = [
     note: "37.4°C measured underarm. Feeding normally and six wet diapers today.",
     observedAt: "2026-07-24T19:30:00",
     intensity: "mild",
-    icon: "°",
+    icon: "🌡",
     tone: "yellow",
     media: [],
   },
@@ -389,7 +389,11 @@ export default function Home() {
         if (stored) {
           setData({
             ...stored,
-            timeline: stored.timeline.map((entry) => ({ ...entry, intensity: entry.intensity ?? (entry.id === "sample-rash" ? "moderate" : "mild") })),
+            timeline: stored.timeline.map((entry) => ({
+              ...entry,
+              icon: (categoryMeta[entry.category] ?? categoryMeta.Other).icon,
+              intensity: entry.intensity ?? (entry.id === "sample-rash" ? "moderate" : "mild"),
+            })),
             forumPosts: stored.forumPosts ?? sampleForumPosts,
           });
         }
