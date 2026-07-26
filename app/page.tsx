@@ -474,11 +474,6 @@ export default function Home() {
             <p>Your records stay on this device.</p>
           </div>
         </div>
-        <button className="profile-chip" onClick={() => setSettingsOpen(true)} aria-label="Open Mila’s profile and privacy settings">
-          <span className="avatar">M</span>
-          <span><strong>Mila</strong><small>5 months old</small></span>
-          <span aria-hidden="true">•••</span>
-        </button>
       </aside>
 
       <section className="workspace">

@@ -88,23 +88,6 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
 .privacy-icon { font-size: 18px; }
 .privacy-note strong { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
 .privacy-note p { margin: 4px 0 0; color: #6c7d76; font-size: 12px; line-height: 1.4; }
-.profile-chip {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 14px;
-  border: 0;
-  background: transparent;
-  padding: 8px;
-  text-align: left;
-  cursor: pointer;
-  border-radius: 12px;
-}
-.profile-chip:hover { background: #f2f0ea; }
-.profile-chip > span:nth-child(2) { flex: 1; }
-.profile-chip strong, .profile-chip small { display: block; }
-.profile-chip strong { font-size: 14px; }
-.profile-chip small { color: var(--muted); font-size: 12px; margin-top: 2px; }
 .avatar, .avatar-button {
   width: 35px;
   height: 35px;
@@ -469,7 +452,6 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
 }
 
 @media (max-width: 680px) {
-  .top-actions .avatar-button { display: none; }
   .emergency-link { font-size: 12px; }
   .content { padding: 28px 16px 95px; }
   .welcome-row, .page-title-row { align-items: flex-start; margin-bottom: 24px; }
