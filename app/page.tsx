@@ -383,6 +383,15 @@ function formatEntryDate(value: string) {
   return `${day} · ${date.toLocaleTimeString("en-CA", { hour: "numeric", minute: "2-digit" })}`;
 }
 
+function timelineCategoryTone(category: string) {
+  if (category === "Fever") return "temperature";
+  if (category === "Rash or skin change") return "skin";
+  if (["Feeding concern", "Vomiting", "Diarrhea"].includes(category)) return "feeding";
+  if (category === "Sleep or behavior change") return "sleep";
+  if (category === "Cough or breathing") return "breathing";
+  return "other";
+}
+
 function MediaPreview({ item }: { item: MediaItem }) {
   const url = useMemo(() => URL.createObjectURL(item.blob), [item.blob]);
   useEffect(() => () => URL.revokeObjectURL(url), [url]);
@@ -817,7 +826,7 @@ export default function Home() {
                 <>
                   <SymptomGraph entries={visibleTimeline} range={timelineRange} selectedId={selectedTimelineEntry?.id} onSelect={setSelectedEntryId} />
                   {selectedTimelineEntry && (
-                    <div className="selected-update">
+                    <div className={`selected-update ${timelineCategoryTone(selectedTimelineEntry.category)}`}>
                       <div className="selected-update-heading"><div><p className="eyebrow">SELECTED UPDATE</p><h2>{formatEntryDate(selectedTimelineEntry.observedAt)}</h2></div><span>Click another marker to compare</span></div>
                       <TimelineCard entry={selectedTimelineEntry} expanded />
                     </div>

@@ -350,7 +350,13 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
 .graph-empty > span { color: var(--green); font-size: 26px; }
 .graph-empty p { color: var(--muted); font-size: 13px; }
 .graph-empty button { border: 0; background: transparent; color: var(--green); font-size: 12px; font-weight: 650; cursor: pointer; }
-.selected-update { margin-top: 20px; padding: 22px 24px 2px; border: 1px solid var(--line); border-radius: 18px; background: white; }
+.selected-update { margin-top: 20px; padding: 22px 24px 2px; border: 1px solid #cadbd2; border-radius: 18px; background: #dceee5; transition: background-color .18s ease, border-color .18s ease; }
+.selected-update.temperature { border-color: #e7b6aa; background: #f7d8d0; }
+.selected-update.skin { border-color: #deb4bf; background: #f3d5dd; }
+.selected-update.feeding { border-color: #e1c675; background: #f3e3ab; }
+.selected-update.sleep { border-color: #b5c1e2; background: #dbe2f7; }
+.selected-update.breathing { border-color: #a6cec9; background: #cee8e5; }
+.selected-update.other { border-color: #cfc3b5; background: #e6ddd2; }
 .selected-update-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding-bottom: 6px; }
 .selected-update-heading h2 { font-size: 20px; }
 .selected-update-heading .eyebrow { margin-bottom: 4px; }
