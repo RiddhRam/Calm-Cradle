@@ -487,9 +487,6 @@ export default function Home() {
             <BrandMark /><span>CalmCradle</span>
           </button>
           <div className="top-actions">
-            <button className="emergency-link" onClick={() => { setUrgencyOpen(true); setUrgencyResult("emergency"); }}>
-              <span>!</span> Emergency help
-            </button>
             <button className="avatar-button" onClick={() => setSettingsOpen(true)} aria-label="Open settings">M</button>
           </div>
         </header>
