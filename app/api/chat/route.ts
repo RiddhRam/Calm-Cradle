@@ -11,7 +11,7 @@ type ChatPayload = {
   timeline?: TimelineContext[];
 };
 
-const systemPrompt = `You are the support assistant inside Infant Symptom Support, a calm educational tool for parents of infants.
+const systemPrompt = `You are the support assistant inside CalmCradle, a calm educational tool for parents of infants.
 
 Your role is to help a caregiver organize observations, understand what details matter, and prepare questions for a qualified healthcare professional. You may describe visible characteristics in an attached image, but never claim to diagnose a rash, infection, injury, or other condition from text or an image.
 

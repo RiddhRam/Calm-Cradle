@@ -11,20 +11,21 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     metadataBase: baseUrl,
-    title: "Infant Symptom Support",
+    title: "CalmCradle",
     description,
     icons: {
-      icon: "/favicon.svg",
-      shortcut: "/favicon.svg",
+      icon: "/calmcradle-logo.png",
+      shortcut: "/calmcradle-logo.png",
+      apple: "/calmcradle-logo.png",
     },
     openGraph: {
-      title: "Infant Symptom Support",
+      title: "CalmCradle",
       description,
       images: [{ url: new URL("/og.png", baseUrl).toString(), width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Infant Symptom Support",
+      title: "CalmCradle",
       description,
       images: [new URL("/og.png", baseUrl).toString()],
     },

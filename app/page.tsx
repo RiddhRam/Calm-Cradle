@@ -200,7 +200,7 @@ function MediaPreview({ item }: { item: MediaItem }) {
 function BrandMark() {
   return (
     <div className="brand-mark" aria-hidden="true">
-      <span>♡</span>
+      <img src="/calmcradle-logo.png" alt="" />
     </div>
   );
 }
@@ -390,7 +390,7 @@ export default function Home() {
     doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(19);
-    doc.text("Infant Symptom Summary", margin, 64);
+    doc.text("CalmCradle · Infant Symptom Summary", margin, 64);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
     doc.text("Prepared for Mila · 5 months old", margin, 84);
@@ -459,8 +459,8 @@ export default function Home() {
         <div className="brand">
           <BrandMark />
           <div>
-            <strong>Infant Symptom</strong>
-            <span>Support</span>
+            <strong>CalmCradle</strong>
+            <span>Infant symptom support</span>
           </div>
         </div>
         <nav aria-label="Primary navigation">
@@ -485,7 +485,7 @@ export default function Home() {
       <section className="workspace">
         <header className="topbar">
           <button className="mobile-brand" onClick={() => goTo("chat")} aria-label="Go to Assistant">
-            <BrandMark /><span>Infant Symptom Support</span>
+            <BrandMark /><span>CalmCradle</span>
           </button>
           <div className="top-actions">
             <button className="emergency-link" onClick={() => { setUrgencyOpen(true); setUrgencyResult("emergency"); }}>
