@@ -602,7 +602,6 @@ export default function Home() {
                 <aside className="report-options">
                   <div className="option-card"><span>✓</span><div><strong>Ready to share</strong><p>Formatted for a quick clinical review.</p></div></div>
                   <div className="option-card"><span>⌁</span><div><strong>Private until you share</strong><p>The PDF is generated on this device.</p></div></div>
-                  <button className="outline-button" onClick={() => void downloadReport()}>Download doctor summary</button>
                   <p className="tiny-note">Images and videos remain in the local timeline and are referenced by file count.</p>
                 </aside>
               </div>
