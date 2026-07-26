@@ -2,7 +2,7 @@
 
 :root {
   --ink: #263630;
-  --muted: #6f7a74;
+  --muted: #596760;
   --green: #2d675b;
   --green-dark: #234f47;
   --sage: #dfece6;
@@ -25,6 +25,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 button, input, textarea, select { font: inherit; }
+input::placeholder, textarea::placeholder { color: #6a766f; opacity: 1; }
 button { color: inherit; }
 button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
   outline: 3px solid rgba(45, 103, 91, 0.24);
@@ -67,7 +68,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #68756f;
+  color: #596760;
   cursor: pointer;
   text-align: left;
 }
@@ -87,7 +88,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
 }
 .privacy-icon { font-size: 18px; }
 .privacy-note strong { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
-.privacy-note p { margin: 4px 0 0; color: #6c7d76; font-size: 12px; line-height: 1.4; }
+.privacy-note p { margin: 4px 0 0; color: #596b63; font-size: 12px; line-height: 1.4; }
 .avatar, .avatar-button {
   width: 35px;
   height: 35px;
@@ -245,7 +246,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
   background: #fafaf7;
   border-radius: 10px;
   padding: 13px 12px;
-  color: #8b948f;
+  color: #64716b;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -255,7 +256,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
   font-size: 11px;
 }
 .chat-prompt b { display: grid; place-items: center; width: 28px; height: 28px; background: var(--green); color: white; border-radius: 8px; font-size: 16px; }
-.tiny-note { color: #858f8a; font-size: 11px; text-align: center; margin: 13px 0 0; line-height: 1.45; }
+.tiny-note { color: #64716b; font-size: 11px; text-align: center; margin: 13px 0 0; line-height: 1.45; }
 .recent-section { margin-top: 24px; border-radius: 20px; padding: 27px 28px; }
 .section-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .section-heading h2 { font-size: 23px; }
@@ -272,7 +273,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
 .entry-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 15px; }
 .entry-heading h3 { margin: 1px 0 3px; font: 650 16px/1.35 "Avenir Next", Avenir, sans-serif; }
 .entry-heading span { color: var(--green); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
-.entry-heading time { color: #7f8984; font-size: 12px; white-space: nowrap; }
+.entry-heading time { color: #64716b; font-size: 12px; white-space: nowrap; }
 .entry-body > p { margin: 9px 0 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
 .media-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
 .entry-media { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 10px; background: #edf0ed; }
@@ -290,7 +291,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
 .graph-heading h2 { font-size: 22px; }
 .graph-heading .eyebrow { margin-bottom: 5px; }
 .intensity-legend { display: flex; gap: 13px; flex-wrap: wrap; justify-content: flex-end; }
-.intensity-legend span { display: flex; align-items: center; gap: 5px; color: #707c76; font-size: 11px; }
+.intensity-legend span { display: flex; align-items: center; gap: 5px; color: #5f6d66; font-size: 11px; }
 .intensity-legend i { display: block; border-radius: 50%; background: var(--sage); }
 .intensity-legend i.mild { width: 8px; height: 8px; }
 .intensity-legend i.moderate { width: 11px; height: 11px; background: var(--yellow); }
@@ -298,7 +299,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
 .graph-scroll { overflow-x: auto; padding: 14px 22px 6px; }
 .graph-content { min-width: 650px; }
 .graph-dates, .graph-lane { display: flex; align-items: center; }
-.graph-dates { height: 28px; color: #7b8781; }
+.graph-dates { height: 28px; color: #64716b; }
 .graph-dates > span, .graph-lane > strong { width: 125px; flex: 0 0 125px; }
 .graph-dates time { flex: 1; text-align: center; font-size: 10px; }
 .graph-lane { border-top: 1px solid #ebece8; }
@@ -333,7 +334,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
 .graph-marker.selected { box-shadow: 0 0 0 3px var(--green), 0 5px 14px rgba(47, 73, 63, .2); }
 .graph-marker > span { font-size: 15px; line-height: 1; }
 .graph-marker > i { position: absolute; right: -7px; bottom: -4px; display: grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; background: white; color: var(--green); font-size: 8px; font-style: normal; box-shadow: 0 2px 5px rgba(47, 73, 63, .15); }
-.graph-note { margin: 4px 22px 16px; color: #7c8782; font-size: 11px; line-height: 1.5; }
+.graph-note { margin: 4px 22px 16px; color: #5f6d66; font-size: 11px; line-height: 1.5; }
 .graph-empty { text-align: center; padding: 40px 20px 24px; }
 .graph-empty > span { color: var(--green); font-size: 26px; }
 .graph-empty p { color: var(--muted); font-size: 13px; }
@@ -342,7 +343,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
 .selected-update-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding-bottom: 6px; }
 .selected-update-heading h2 { font-size: 20px; }
 .selected-update-heading .eyebrow { margin-bottom: 4px; }
-.selected-update-heading > span { color: #89928e; font-size: 11px; }
+.selected-update-heading > span { color: #64716b; font-size: 11px; }
 .entry-tags { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
 .entry-heading .intensity-tag { border-radius: 99px; padding: 3px 7px; font-size: 9px; letter-spacing: .06em; }
 .intensity-tag.mild { background: var(--sage); }
@@ -364,7 +365,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
 .context-strip { display: flex; gap: 10px; padding: 11px 30px; background: #edf4f0; color: #5c7168; }
 .context-strip p { margin: 0; font-size: 13px; line-height: 1.45; }
 .messages { padding: 24px 30px 14px; min-height: 390px; max-height: calc(100vh - 390px); overflow-y: auto; flex: 1; }
-.date-divider { display: flex; align-items: center; gap: 10px; color: #87918c; font-size: 11px; margin: 4px 0 22px; }
+.date-divider { display: flex; align-items: center; gap: 10px; color: #64716b; font-size: 11px; margin: 4px 0 22px; }
 .date-divider::before, .date-divider::after { content: ""; height: 1px; flex: 1; background: var(--line); }
 .message-row { display: flex; align-items: flex-start; gap: 9px; margin: 13px 0; }
 .message-row.user { justify-content: flex-end; }
@@ -372,8 +373,8 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
 .message-bubble { max-width: 72%; padding: 12px 14px; border-radius: 14px 14px 14px 4px; background: #f0f4f1; }
 .message-row.user .message-bubble { background: var(--green); color: white; border-radius: 14px 14px 4px 14px; }
 .message-bubble p { margin: 0; font-size: 15px; line-height: 1.6; }
-.message-bubble time { display: block; color: #7f8d86; font-size: 11px; margin-top: 7px; }
-.message-row.user time { color: #c9d9d3; text-align: right; }
+.message-bubble time { display: block; color: #637169; font-size: 11px; margin-top: 7px; }
+.message-row.user time { color: #e2ece8; text-align: right; }
 .typing { display: flex; gap: 4px; background: #f0f4f1; padding: 12px 14px; border-radius: 14px; }
 .typing i { width: 5px; height: 5px; background: #91a098; border-radius: 50%; animation: bob 1s infinite alternate; }
 .typing i:nth-child(2) { animation-delay: .2s; }.typing i:nth-child(3) { animation-delay: .4s; }
@@ -388,7 +389,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
 .attach-button input { display: none; }
 .send-button { border: 0; background: var(--green); color: white; font-size: 18px; }
 .send-button:disabled { opacity: .4; cursor: default; }
-.composer > p { text-align: center; color: #7f8984; font-size: 11px; margin: 9px 0 0; }
+.composer > p { text-align: center; color: #64716b; font-size: 11px; margin: 9px 0 0; }
 .attachment-chip { display: inline-flex; align-items: center; gap: 6px; background: var(--sage); border-radius: 8px; padding: 7px 9px; margin-bottom: 7px; font-size: 12px; }
 .attachment-chip button { border: 0; background: transparent; cursor: pointer; }
 .chat-context { padding: 25px 22px; position: sticky; top: 96px; }
@@ -401,7 +402,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
 .home-status { display: flex; align-items: center; gap: 10px; padding: 17px 0; border-bottom: 1px solid var(--line); }
 .home-status .status-dot { width: 34px; height: 34px; }
 .home-status small, .home-status strong { display: block; }
-.home-status small { color: #76817b; font-size: 10px; letter-spacing: .08em; }
+.home-status small { color: #5f6d66; font-size: 10px; letter-spacing: .08em; }
 .home-status strong { color: var(--green-dark); font-size: 13px; margin-top: 3px; }
 .context-actions { display: grid; gap: 8px; padding: 17px 0 21px; }
 .context-actions button { width: 100%; font-size: 13px; }
@@ -412,7 +413,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
 .context-item .entry-icon { width: 33px; height: 33px; font-size: 14px; }
 .context-item strong, .context-item small { display: block; }
 .context-item strong { font-size: 13px; }
-.context-item small { font-size: 11px; color: #7f8984; margin-top: 4px; }
+.context-item small { font-size: 11px; color: #64716b; margin-top: 4px; }
 
 .forum-page { min-height: 720px; }
 .community-banner {
@@ -493,7 +494,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
 .post-author > div { min-width: 0; }
 .post-author strong, .post-author small { display: block; }
 .post-author strong { font-size: 14px; }
-.post-author small, .reply-content small { color: #7c8781; font-size: 11px; margin-top: 2px; line-height: 1.4; }
+.post-author small, .reply-content small { color: #64716b; font-size: 11px; margin-top: 2px; line-height: 1.4; }
 .topic-pill {
   margin-left: auto;
   border-radius: 99px;
@@ -607,7 +608,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
 .report-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
 .report-stats span { padding: 12px; border: 1px solid var(--line); border-radius: 8px; }
 .report-stats small, .report-stats strong { display: block; }
-.report-stats small { color: #7f8984; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; }
+.report-stats small { color: #64716b; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; }
 .report-stats strong { color: var(--green); margin-top: 5px; font-size: 13px; }
 .report-entry { display: grid; grid-template-columns: 105px 1fr; gap: 15px; padding: 11px 0; border-bottom: 1px solid var(--line); }
 .report-entry time { color: #6f7b75; font-size: 11px; }
@@ -631,7 +632,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
 .modal-card textarea { resize: vertical; }
 .upload-zone { border: 1px dashed #bdcbc4; background: #f5f8f5; border-radius: 12px; padding: 18px; place-items: center; text-align: center; cursor: pointer; }
 .upload-zone > span { display: grid; place-items: center; width: 31px; height: 31px; border-radius: 50%; background: var(--sage); color: var(--green); font-size: 18px; }
-.upload-zone small { color: #929b96; font-weight: 400; }
+.upload-zone small { color: #64716b; font-weight: 500; }
 .upload-zone input { border: 0; background: transparent; padding: 3px; font-size: 12px; }
 .modal-actions { display: flex; justify-content: flex-end; align-items: center; gap: 18px; margin-top: 8px; }
 .yes-no { border: 0; padding: 0; display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 8px; }
