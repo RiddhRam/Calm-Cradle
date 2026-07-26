@@ -827,7 +827,7 @@ export default function Home() {
                   <SymptomGraph entries={visibleTimeline} range={timelineRange} selectedId={selectedTimelineEntry?.id} onSelect={setSelectedEntryId} />
                   {selectedTimelineEntry && (
                     <div className={`selected-update ${timelineCategoryTone(selectedTimelineEntry.category)}`}>
-                      <div className="selected-update-heading"><div><p className="eyebrow">SELECTED UPDATE</p><h2>{formatEntryDate(selectedTimelineEntry.observedAt)}</h2></div><span>Click another marker to compare</span></div>
+                      <div className="selected-update-heading"><div><p className="eyebrow">SELECTED UPDATE</p><h2>{formatEntryDate(selectedTimelineEntry.observedAt)}</h2></div></div>
                       <TimelineCard entry={selectedTimelineEntry} expanded />
                     </div>
                   )}
