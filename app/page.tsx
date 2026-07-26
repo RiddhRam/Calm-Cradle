@@ -502,7 +502,7 @@ export default function Home() {
               <section className="welcome-row">
                 <div>
                   <p className="eyebrow">{new Date().toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" })}</p>
-                  <h1>Good morning, Riddh.</h1>
+                  <h1>Good morning, TestUser.</h1>
                   <p>Mila’s latest notes look steady. You’re doing a thoughtful job keeping track.</p>
                 </div>
                 <button className="primary-button desktop-only" onClick={() => setLogOpen(true)}><span>＋</span> Add an update</button>
