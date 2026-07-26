@@ -577,6 +577,11 @@ export default function Home() {
   async function sendChat(messageOverride?: string) {
     const text = (messageOverride ?? chatInput).trim();
     if (!text || chatBusy) return;
+    const responseStartedAt = Date.now();
+    const waitForMinimumBuffer = async () => {
+      const remaining = 2000 - (Date.now() - responseStartedAt);
+      if (remaining > 0) await new Promise((resolve) => window.setTimeout(resolve, remaining));
+    };
     const userMessage: ChatMessage = {
       id: crypto.randomUUID(),
       role: "user",
@@ -612,9 +617,11 @@ export default function Home() {
         text: payload.reply || "I’m here with you. Tell me what you’ve noticed and when it started.",
         time: "Just now",
       };
+      await waitForMinimumBuffer();
       setData((current) => ({ ...current, chats: [...current.chats, assistantMessage] }));
       setScriptStep((step) => (step + 1) % 5);
     } catch {
+      await waitForMinimumBuffer();
       setData((current) => ({
         ...current,
         chats: [
