@@ -840,7 +840,7 @@ export default function Home() {
                         {post.media.length > 0 && <div className="media-grid">{post.media.map((item) => <MediaPreview item={item} key={item.id} />)}</div>}
                         <div className="post-footer">
                           <button className="post-action helpful-action" onClick={() => likePost(post.id)} aria-label={`Mark ${post.title} as helpful`}>
-                            <span className="heart-icon" aria-hidden="true">♥</span>
+                            <span className="heart-icon" aria-hidden="true">♡</span>
                             <span>{post.likes} helpful</span>
                           </button>
                           <button className="post-action" onClick={() => setOpenPostId(expanded ? null : post.id)}>◌ <span>{post.replies.length} {post.replies.length === 1 ? "reply" : "replies"}</span></button>

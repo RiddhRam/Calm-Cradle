@@ -460,17 +460,18 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
 .post-action:hover { background: #f1f5f2; color: var(--green); }
 .post-action > span:last-child { font-size: 12px; font-weight: 650; }
 .heart-icon {
-  width: 25px;
-  height: 25px;
+  width: 21px;
+  height: 21px;
+  flex: 0 0 21px;
   display: grid;
   place-items: center;
-  border-radius: 50%;
-  background: #faece6;
-  color: #b96755;
-  font: 13px/1 Arial, sans-serif;
-  transition: transform .15s ease, background .15s ease;
+  color: currentColor;
+  font: 20px/1 Arial, Helvetica, sans-serif;
+  transform: scaleX(1.16);
+  transform-origin: center;
+  transition: transform .15s ease;
 }
-.helpful-action:hover .heart-icon { transform: scale(1.06); background: var(--peach); }
+.helpful-action:hover .heart-icon { transform: scaleX(1.16) scale(1.06); }
 .replies-panel { margin: 0 -24px; background: #fafbf8; border-top: 1px solid var(--line); padding: 5px 24px 19px; }
 .forum-reply { display: flex; gap: 10px; padding: 17px 0; border-bottom: 1px solid var(--line); }
 .reply-content { flex: 1; min-width: 0; }
