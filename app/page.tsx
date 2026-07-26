@@ -1119,12 +1119,12 @@ function NavButton({ active, icon, label, onClick }: { active: boolean; icon: st
 }
 
 const symptomLanes = [
-  { label: "Temperature", matches: (entry: TimelineEntry) => entry.category === "Fever" },
-  { label: "Skin", matches: (entry: TimelineEntry) => entry.category === "Rash or skin change" },
-  { label: "Feeding", matches: (entry: TimelineEntry) => ["Feeding concern", "Vomiting", "Diarrhea"].includes(entry.category) },
-  { label: "Sleep & behavior", matches: (entry: TimelineEntry) => entry.category === "Sleep or behavior change" },
-  { label: "Breathing", matches: (entry: TimelineEntry) => entry.category === "Cough or breathing" },
-  { label: "Other", matches: (entry: TimelineEntry) => entry.category === "Other" },
+  { label: "Temperature", icon: "🌡", tone: "temperature", matches: (entry: TimelineEntry) => entry.category === "Fever" },
+  { label: "Skin", icon: "✦", tone: "skin", matches: (entry: TimelineEntry) => entry.category === "Rash or skin change" },
+  { label: "Feeding", icon: "◒", tone: "feeding", matches: (entry: TimelineEntry) => ["Feeding concern", "Vomiting", "Diarrhea"].includes(entry.category) },
+  { label: "Sleep & behavior", icon: "☾", tone: "sleep", matches: (entry: TimelineEntry) => entry.category === "Sleep or behavior change" },
+  { label: "Breathing", icon: "〰", tone: "breathing", matches: (entry: TimelineEntry) => entry.category === "Cough or breathing" },
+  { label: "Other", icon: "＋", tone: "other", matches: (entry: TimelineEntry) => entry.category === "Other" },
 ];
 
 function SymptomGraph({
@@ -1170,12 +1170,21 @@ function SymptomGraph({
       {rangeEntries.length ? (
         <div className="graph-scroll">
           <div className="graph-content">
-            <div className="graph-dates"><span></span>{dateLabels.map((label, index) => <time key={`${label}-${index}`}>{label}</time>)}</div>
-            {lanes.map((lane) => (
-              <div className="graph-lane" key={lane.label}>
-                <strong>{lane.label}</strong>
+            <div className="graph-dates">
+              <span>Earlier</span>
+              <div>{dateLabels.map((label, index) => <time key={`${label}-${index}`}><i></i>{label}</time>)}</div>
+            </div>
+            <div className="graph-lanes">
+            {lanes.map((lane) => {
+              const laneEntries = rangeEntries.filter(lane.matches);
+              return (
+              <div className={`graph-lane ${lane.tone}`} key={lane.label}>
+                <div className="graph-lane-label">
+                  <span>{lane.icon}</span>
+                  <div><strong>{lane.label}</strong><small>{laneEntries.length} {laneEntries.length === 1 ? "update" : "updates"}</small></div>
+                </div>
                 <div className="graph-track">
-                  {rangeEntries.filter(lane.matches).map((entry) => {
+                  {laneEntries.map((entry) => {
                     const left = ((new Date(entry.observedAt).getTime() - start.getTime()) / span) * 100;
                     return (
                       <button
@@ -1193,7 +1202,8 @@ function SymptomGraph({
                   })}
                 </div>
               </div>
-            ))}
+            )})}
+            </div>
           </div>
         </div>
       ) : (

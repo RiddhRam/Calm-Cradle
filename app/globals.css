@@ -296,22 +296,33 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
 .intensity-legend i.mild { width: 8px; height: 8px; }
 .intensity-legend i.moderate { width: 11px; height: 11px; background: var(--yellow); }
 .intensity-legend i.significant { width: 14px; height: 14px; background: var(--peach); }
-.graph-scroll { overflow-x: auto; padding: 14px 22px 6px; }
-.graph-content { min-width: 650px; }
-.graph-dates, .graph-lane { display: flex; align-items: center; }
-.graph-dates { height: 28px; color: #64716b; }
-.graph-dates > span, .graph-lane > strong { width: 125px; flex: 0 0 125px; }
-.graph-dates time { flex: 1; text-align: center; font-size: 10px; }
-.graph-lane { border-top: 1px solid #ebece8; }
-.graph-lane > strong { padding-right: 18px; color: #5b6962; font-size: 12px; font-weight: 650; }
+.graph-scroll { overflow-x: auto; padding: 17px 22px 8px; }
+.graph-content { min-width: 700px; }
+.graph-dates { display: flex; align-items: flex-end; min-height: 35px; color: #64716b; }
+.graph-dates > span, .graph-lane-label { width: 154px; flex: 0 0 154px; }
+.graph-dates > span { padding: 0 0 8px 5px; color: #79847e; font-size: 10px; font-weight: 650; text-transform: uppercase; letter-spacing: .08em; }
+.graph-dates > div { display: flex; flex: 1; align-items: flex-end; }
+.graph-dates time { position: relative; flex: 1; padding-bottom: 8px; text-align: center; font-size: 10px; }
+.graph-dates time i { position: absolute; left: 50%; bottom: 0; width: 1px; height: 5px; background: #bcc7c0; }
+.graph-lanes { display: grid; gap: 10px; }
+.graph-lane { display: flex; align-items: center; min-height: 76px; padding: 8px 16px 8px 10px; border: 1px solid #e1e8e3; border-left: 4px solid #96b8aa; border-radius: 15px; background: linear-gradient(90deg, #f0f7f3 0, #fbfdfb 34%, #fff 100%); box-shadow: 0 3px 12px rgba(47, 73, 63, .04); }
+.graph-lane.temperature { border-left-color: #db8978; background: linear-gradient(90deg, #fff1ed 0, #fffaf8 34%, #fff 100%); }
+.graph-lane.skin { border-left-color: #c98b9a; background: linear-gradient(90deg, #fff0f3 0, #fff9fa 34%, #fff 100%); }
+.graph-lane.feeding { border-left-color: #d4a94d; background: linear-gradient(90deg, #fff8e7 0, #fffdf7 34%, #fff 100%); }
+.graph-lane.sleep { border-left-color: #8e9dc7; background: linear-gradient(90deg, #f0f3fc 0, #fafbfe 34%, #fff 100%); }
+.graph-lane.breathing { border-left-color: #75aaa5; background: linear-gradient(90deg, #ecf8f7 0, #f8fcfb 34%, #fff 100%); }
+.graph-lane.other { border-left-color: #a59b8d; background: linear-gradient(90deg, #f5f2ed 0, #fbfaf8 34%, #fff 100%); }
+.graph-lane-label { display: flex; align-items: center; gap: 10px; padding-right: 14px; }
+.graph-lane-label > span { display: grid; place-items: center; width: 32px; height: 32px; flex: 0 0 32px; border-radius: 10px; background: rgba(255,255,255,.82); color: var(--green-dark); font-size: 17px; box-shadow: 0 2px 7px rgba(47, 73, 63, .08); }
+.graph-lane-label strong { display: block; color: #43534b; font-size: 12px; font-weight: 750; line-height: 1.2; }
+.graph-lane-label small { display: block; margin-top: 3px; color: #748078; font-size: 10px; }
 .graph-track {
   position: relative;
-  height: 61px;
+  height: 58px;
   flex: 1;
-  background-image: linear-gradient(to right, rgba(108, 127, 118, .11) 1px, transparent 1px);
-  background-size: calc(100% / 7) 100%;
 }
-.graph-track::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: #dfe4df; }
+.graph-track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; border-radius: 99px; background: #dce5df; }
+.graph-track::after { content: ""; position: absolute; right: -2px; top: calc(50% - 4px); width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid #b7c7bd; }
 .graph-marker {
   position: absolute;
   top: 50%;
@@ -319,7 +330,7 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
   display: grid;
   place-items: center;
   transform: translate(-50%, -50%);
-  border: 3px solid #fbfcf9;
+  border: 3px solid white;
   border-radius: 50%;
   background: var(--sage);
   color: var(--green-dark);
