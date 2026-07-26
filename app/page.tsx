@@ -160,6 +160,38 @@ const sampleChats: ChatMessage[] = [
 
 const sampleForumPosts: ForumPost[] = [
   {
+    id: "forum-rash",
+    author: "Rachel N.",
+    initials: "RN",
+    babyAge: "Caleb · 6 months",
+    title: "New little rash after trying a different laundry detergent",
+    body: "Caleb has a patch of tiny red bumps across his upper back that appeared this morning. He seems comfortable, is feeding normally, and does not have a fever. We recently changed laundry detergent, so I’ve switched back and am keeping an eye on it. Has anyone seen something similar?",
+    topic: "Skin",
+    createdAt: "2026-07-26T12:15:00",
+    likes: 13,
+    media: [],
+    replies: [
+      {
+        id: "reply-rash-1",
+        author: "Mei L.",
+        initials: "ML",
+        babyAge: "Ari · 8 months",
+        body: "We had a similar-looking patch after changing detergent. We went back to our fragrance-free one and mentioned it to our pediatrician. Taking one photo each day made it easier to tell whether it was changing.",
+        createdAt: "2026-07-26T12:44:00",
+        media: [],
+      },
+      {
+        id: "reply-rash-2",
+        author: "Jordan P.",
+        initials: "JP",
+        babyAge: "Mason · 5 months",
+        body: "I’d keep watching his comfort and whether it spreads. Our doctor told us to get help sooner for swelling around the face, breathing changes, fever, blisters, or if the baby seems unusually unwell.",
+        createdAt: "2026-07-26T13:08:00",
+        media: [],
+      },
+    ],
+  },
+  {
     id: "forum-sleep",
     author: "Sofia M.",
     initials: "SM",
@@ -395,6 +427,7 @@ export default function Home() {
     readStoredData()
       .then((stored) => {
         if (stored) {
+          const existingForumPosts = stored.forumPosts ?? sampleForumPosts;
           setData({
             ...stored,
             chats: stored.chats.map((message) => sampleChats.find((sample) => sample.id === message.id) ?? { ...message, text: updateInfantName(message.text) }),
@@ -404,7 +437,10 @@ export default function Home() {
               icon: (categoryMeta[entry.category] ?? categoryMeta.Other).icon,
               intensity: entry.intensity ?? (entry.id === "sample-rash" ? "moderate" : "mild"),
             })),
-            forumPosts: (stored.forumPosts ?? sampleForumPosts).map((post) => ({
+            forumPosts: [
+              ...sampleForumPosts.filter((sample) => !existingForumPosts.some((post) => post.id === sample.id)),
+              ...existingForumPosts,
+            ].map((post) => ({
               ...post,
               babyAge: updateInfantName(post.babyAge),
               replies: post.replies.map((reply) => ({ ...reply, babyAge: updateInfantName(reply.babyAge) })),
