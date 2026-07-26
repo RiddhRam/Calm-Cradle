@@ -2,7 +2,7 @@
 
 import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
-type Tab = "chat" | "timeline" | "report";
+type Tab = "chat" | "timeline" | "forum" | "report";
 type Urgency = "monitor" | "soon" | "emergency";
 
 type MediaItem = {
@@ -31,9 +31,34 @@ type ChatMessage = {
   time: string;
 };
 
+type ForumReply = {
+  id: string;
+  author: string;
+  initials: string;
+  babyAge: string;
+  body: string;
+  createdAt: string;
+  media: MediaItem[];
+};
+
+type ForumPost = {
+  id: string;
+  author: string;
+  initials: string;
+  babyAge: string;
+  title: string;
+  body: string;
+  topic: "Sleep" | "Feeding" | "Skin" | "Development" | "Everyday";
+  createdAt: string;
+  likes: number;
+  replies: ForumReply[];
+  media: MediaItem[];
+};
+
 type AppData = {
   timeline: TimelineEntry[];
   chats: ChatMessage[];
+  forumPosts: ForumPost[];
 };
 
 const symptomOptions = [
@@ -128,7 +153,133 @@ const sampleChats: ChatMessage[] = [
   },
 ];
 
-const fallbackData: AppData = { timeline: sampleTimeline, chats: sampleChats };
+const sampleForumPosts: ForumPost[] = [
+  {
+    id: "forum-sleep",
+    author: "Sofia M.",
+    initials: "SM",
+    babyAge: "Noah · 4 months",
+    title: "How did you transition out of the swaddle?",
+    body: "Noah is starting to roll, so we need to stop swaddling. We tried one arm out last night and he woke every hour. What made the transition gentler for your family?",
+    topic: "Sleep",
+    createdAt: "2026-07-26T08:42:00",
+    likes: 18,
+    media: [],
+    replies: [
+      {
+        id: "reply-sleep-1",
+        author: "Priya K.",
+        initials: "PK",
+        babyAge: "Anya · 7 months",
+        body: "We did one arm out for three nights, then moved to a sleep sack. The first two nights were rough, but keeping the bedtime routine exactly the same helped.",
+        createdAt: "2026-07-26T09:18:00",
+        media: [],
+      },
+      {
+        id: "reply-sleep-2",
+        author: "Marcus L.",
+        initials: "ML",
+        babyAge: "Theo · 6 months",
+        body: "A slightly earlier bedtime helped us during the transition because he was less overtired. We also practised naps in the sleep sack first.",
+        createdAt: "2026-07-26T10:04:00",
+        media: [],
+      },
+    ],
+  },
+  {
+    id: "forum-feeding",
+    author: "Jamie R.",
+    initials: "JR",
+    babyAge: "Ellie · 5 months",
+    title: "Suddenly refusing the evening bottle",
+    body: "For the past three evenings Ellie takes a little, pulls away, then wants the bottle again. Daytime feeds are normal. Has anyone gone through a phase like this?",
+    topic: "Feeding",
+    createdAt: "2026-07-25T20:12:00",
+    likes: 11,
+    media: [],
+    replies: [
+      {
+        id: "reply-feeding-1",
+        author: "Amara D.",
+        initials: "AD",
+        babyAge: "Zuri · 8 months",
+        body: "We had something similar when evenings became more distracting. A quieter room and a short pause before offering again worked for us.",
+        createdAt: "2026-07-25T21:02:00",
+        media: [],
+      },
+    ],
+  },
+  {
+    id: "forum-skin",
+    author: "Leah C.",
+    initials: "LC",
+    babyAge: "Owen · 3 months",
+    title: "Keeping little cheeks comfortable in dry weather",
+    body: "The air has been so dry and Owen’s cheeks look rough by the end of the day. I’m tracking it and will ask our doctor, but I’d love to hear what gentle routine other parents use.",
+    topic: "Skin",
+    createdAt: "2026-07-25T14:35:00",
+    likes: 24,
+    media: [],
+    replies: [
+      {
+        id: "reply-skin-1",
+        author: "Nora P.",
+        initials: "NP",
+        babyAge: "Maya · 9 months",
+        body: "We keep baths short and pat dry instead of rubbing. Our clinician also helped us choose a simple fragrance-free moisturizer.",
+        createdAt: "2026-07-25T15:11:00",
+        media: [],
+      },
+      {
+        id: "reply-skin-2",
+        author: "Daniel S.",
+        initials: "DS",
+        babyAge: "Eli · 4 months",
+        body: "A cool-mist humidifier made our nursery more comfortable. We clean it daily and still check with our pediatrician when the skin changes.",
+        createdAt: "2026-07-25T16:28:00",
+        media: [],
+      },
+    ],
+  },
+  {
+    id: "forum-development",
+    author: "Camila T.",
+    initials: "CT",
+    babyAge: "Leo · 4 months",
+    title: "Tummy time ideas for a baby who protests",
+    body: "Leo lasts about two minutes on the mat before getting upset. What playful variations helped your little one build up gradually?",
+    topic: "Development",
+    createdAt: "2026-07-24T11:20:00",
+    likes: 31,
+    media: [],
+    replies: [
+      {
+        id: "reply-development-1",
+        author: "Hannah B.",
+        initials: "HB",
+        babyAge: "Iris · 6 months",
+        body: "Chest-to-chest tummy time counted for us! We also used a rolled towel and a mirror, just for very short happy sessions.",
+        createdAt: "2026-07-24T12:03:00",
+        media: [],
+      },
+    ],
+  },
+  {
+    id: "forum-everyday",
+    author: "Alex W.",
+    initials: "AW",
+    babyAge: "Sam · 7 months",
+    title: "What do you pack for a first weekend trip?",
+    body: "We’re taking our first two-night road trip and my packing list is becoming enormous. What did you actually use, and what could you have left at home?",
+    topic: "Everyday",
+    createdAt: "2026-07-23T18:47:00",
+    likes: 15,
+    media: [],
+    replies: [],
+  },
+];
+
+const fallbackData: AppData = { timeline: sampleTimeline, chats: sampleChats, forumPosts: sampleForumPosts };
 const DB_NAME = "infant-symptom-support";
 const STORE_NAME = "local-records";
 const APP_KEY = "mila-profile";
@@ -214,6 +365,10 @@ export default function Home() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [urgencyResult, setUrgencyResult] = useState<Urgency | null>(null);
   const [timelineFilter, setTimelineFilter] = useState("All");
+  const [forumFilter, setForumFilter] = useState("All");
+  const [forumSearch, setForumSearch] = useState("");
+  const [newPostOpen, setNewPostOpen] = useState(false);
+  const [openPostId, setOpenPostId] = useState<string | null>("forum-sleep");
   const [chatInput, setChatInput] = useState("");
   const [chatImage, setChatImage] = useState<File | null>(null);
   const [chatBusy, setChatBusy] = useState(false);
@@ -224,7 +379,7 @@ export default function Home() {
   useEffect(() => {
     readStoredData()
       .then((stored) => {
-        if (stored) setData(stored);
+        if (stored) setData({ ...stored, forumPosts: stored.forumPosts ?? sampleForumPosts });
         else return writeStoredData(fallbackData);
       })
       .finally(() => setHydrated(true));
@@ -250,6 +405,12 @@ export default function Home() {
     timelineFilter === "All"
       ? data.timeline
       : data.timeline.filter((entry) => entry.category === timelineFilter);
+  const visibleForumPosts = data.forumPosts.filter((post) => {
+    const matchesTopic = forumFilter === "All" || post.topic === forumFilter;
+    const query = forumSearch.trim().toLowerCase();
+    const matchesSearch = !query || `${post.title} ${post.body} ${post.author} ${post.babyAge}`.toLowerCase().includes(query);
+    return matchesTopic && matchesSearch;
+  });
 
   function goTo(tab: Tab) {
     setActiveTab(tab);
@@ -285,6 +446,74 @@ export default function Home() {
     setLogOpen(false);
     setToast("Symptom update saved to Mila’s timeline.");
     event.currentTarget.reset();
+  }
+
+  function mediaFromForm(form: FormData): MediaItem[] {
+    return form.getAll("media")
+      .filter((item): item is File => item instanceof File && item.size > 0)
+      .map((file) => ({
+        id: crypto.randomUUID(),
+        name: file.name,
+        mime: file.type,
+        kind: file.type.startsWith("video/") ? "video" : "image",
+        blob: file,
+      }));
+  }
+
+  function handleNewPost(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const post: ForumPost = {
+      id: crypto.randomUUID(),
+      author: "You",
+      initials: "YO",
+      babyAge: "Mila · 5 months",
+      title: String(form.get("title")).trim(),
+      body: String(form.get("body")).trim(),
+      topic: String(form.get("topic")) as ForumPost["topic"],
+      createdAt: new Date().toISOString(),
+      likes: 0,
+      replies: [],
+      media: mediaFromForm(form),
+    };
+    setData((current) => ({ ...current, forumPosts: [post, ...current.forumPosts] }));
+    setNewPostOpen(false);
+    setOpenPostId(post.id);
+    setForumFilter("All");
+    setForumSearch("");
+    setToast("Your community post is live on this device.");
+    event.currentTarget.reset();
+  }
+
+  function handleReply(event: FormEvent<HTMLFormElement>, postId: string) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const reply: ForumReply = {
+      id: crypto.randomUUID(),
+      author: "You",
+      initials: "YO",
+      babyAge: "Mila · 5 months",
+      body: String(form.get("body")).trim(),
+      createdAt: new Date().toISOString(),
+      media: mediaFromForm(form),
+    };
+    setData((current) => ({
+      ...current,
+      forumPosts: current.forumPosts.map((post) =>
+        post.id === postId ? { ...post, replies: [...post.replies, reply] } : post,
+      ),
+    }));
+    setToast("Reply added to the conversation.");
+    event.currentTarget.reset();
+  }
+
+  function likePost(postId: string) {
+    setData((current) => ({
+      ...current,
+      forumPosts: current.forumPosts.map((post) =>
+        post.id === postId ? { ...post, likes: post.likes + 1 } : post,
+      ),
+    }));
   }
 
   function evaluateUrgency(event: FormEvent<HTMLFormElement>) {
@@ -441,14 +670,14 @@ export default function Home() {
   }
 
   function resetSampleData() {
-    setData({ timeline: sampleTimeline, chats: sampleChats });
+    setData({ timeline: sampleTimeline, chats: sampleChats, forumPosts: sampleForumPosts });
     setSettingsOpen(false);
     setToast("Sample profile restored.");
   }
 
   function deleteAllData() {
-    if (!window.confirm("Delete every symptom log, chat, image, and video stored on this device?")) return;
-    setData({ timeline: [], chats: [] });
+    if (!window.confirm("Delete every symptom log, chat, community post, image, and video stored on this device?")) return;
+    setData({ timeline: [], chats: [], forumPosts: [] });
     setSettingsOpen(false);
     setToast("All local records have been deleted.");
   }
@@ -465,6 +694,7 @@ export default function Home() {
         <nav aria-label="Primary navigation">
           <NavButton active={activeTab === "chat"} icon="◌" label="Assistant" onClick={() => goTo("chat")} />
           <NavButton active={activeTab === "timeline"} icon="≡" label="Timeline" onClick={() => goTo("timeline")} />
+          <NavButton active={activeTab === "forum"} icon="◎" label="Community" onClick={() => goTo("forum")} />
           <NavButton active={activeTab === "report"} icon="□" label="Doctor report" onClick={() => goTo("report")} />
         </nav>
         <div className="privacy-note">
@@ -569,6 +799,101 @@ export default function Home() {
             </section>
           )}
 
+          {activeTab === "forum" && (
+            <section className="forum-page">
+              <div className="page-title-row">
+                <div>
+                  <p className="eyebrow">PARENT COMMUNITY</p>
+                  <h1>CalmCradle community</h1>
+                  <p>A gentle place to swap practical ideas, small wins, and reassurance with other parents.</p>
+                </div>
+                <button className="primary-button" onClick={() => setNewPostOpen(true)}><span>＋</span> New post</button>
+              </div>
+
+              <div className="community-banner">
+                <span>♡</span>
+                <div><strong>Parents supporting parents</strong><p>Community experiences can be comforting, but they do not replace advice from your child’s healthcare professional.</p></div>
+              </div>
+
+              <div className="forum-toolbar">
+                <label className="forum-search"><span>⌕</span><input value={forumSearch} onChange={(event) => setForumSearch(event.target.value)} placeholder="Search community posts" aria-label="Search community posts" /></label>
+                <div className="forum-filters" aria-label="Filter community posts">
+                  {["All", "Sleep", "Feeding", "Skin", "Development", "Everyday"].map((topic) => (
+                    <button key={topic} className={forumFilter === topic ? "active" : ""} onClick={() => setForumFilter(topic)}>{topic}</button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="forum-layout">
+                <div className="forum-feed">
+                  {visibleForumPosts.length ? visibleForumPosts.map((post) => {
+                    const expanded = openPostId === post.id;
+                    return (
+                      <article className="forum-card" key={post.id}>
+                        <div className="post-author">
+                          <span className="forum-avatar">{post.initials}</span>
+                          <div><strong>{post.author}</strong><small>{post.babyAge} · {formatEntryDate(post.createdAt)}</small></div>
+                          <span className={`topic-pill topic-${post.topic.toLowerCase()}`}>{post.topic}</span>
+                        </div>
+                        <h2>{post.title}</h2>
+                        <p className="post-body">{post.body}</p>
+                        {post.media.length > 0 && <div className="media-grid">{post.media.map((item) => <MediaPreview item={item} key={item.id} />)}</div>}
+                        <div className="post-footer">
+                          <button className="post-action" onClick={() => likePost(post.id)}>♡ <span>{post.likes} helpful</span></button>
+                          <button className="post-action" onClick={() => setOpenPostId(expanded ? null : post.id)}>◌ <span>{post.replies.length} {post.replies.length === 1 ? "reply" : "replies"}</span></button>
+                        </div>
+                        {expanded && (
+                          <div className="replies-panel">
+                            {post.replies.map((reply) => (
+                              <div className="forum-reply" key={reply.id}>
+                                <span className="forum-avatar small">{reply.initials}</span>
+                                <div className="reply-content">
+                                  <div><strong>{reply.author}</strong><small>{reply.babyAge} · {formatEntryDate(reply.createdAt)}</small></div>
+                                  <p>{reply.body}</p>
+                                  {reply.media.length > 0 && <div className="media-grid compact-media">{reply.media.map((item) => <MediaPreview item={item} key={item.id} />)}</div>}
+                                </div>
+                              </div>
+                            ))}
+                            {!post.replies.length && <p className="first-reply">No replies yet. You can be the first to offer encouragement.</p>}
+                            <form className="reply-form" onSubmit={(event) => handleReply(event, post.id)}>
+                              <span className="forum-avatar small">YO</span>
+                              <div>
+                                <textarea name="body" required rows={2} placeholder="Add a kind, helpful reply…" aria-label={`Reply to ${post.title}`} />
+                                <div className="reply-actions">
+                                  <label className="reply-attach">＋ Photo or video<input name="media" type="file" accept="image/*,video/*" multiple onChange={validateFiles} /></label>
+                                  <button className="primary-button" type="submit">Reply</button>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                        )}
+                      </article>
+                    );
+                  }) : (
+                    <div className="forum-empty"><span>⌕</span><h2>No posts found</h2><p>Try another topic or start a new conversation.</p><button className="primary-button" onClick={() => setNewPostOpen(true)}>Create a post</button></div>
+                  )}
+                </div>
+                <aside className="forum-sidebar">
+                  <div className="guidelines-card">
+                    <p className="eyebrow">COMMUNITY CARE</p>
+                    <h2>Kind, useful, and safe</h2>
+                    <ul>
+                      <li>Share your experience, not a diagnosis.</li>
+                      <li>Keep infants’ personal details private.</li>
+                      <li>Encourage professional care when needed.</li>
+                    </ul>
+                  </div>
+                  <div className="topics-card">
+                    <p className="eyebrow">POPULAR TOPICS</p>
+                    {["Sleep", "Feeding", "Skin", "Development"].map((topic) => (
+                      <button className="topic-row" key={topic} onClick={() => setForumFilter(topic)}><span>{topic}</span><b>{data.forumPosts.filter((post) => post.topic === topic).length}</b></button>
+                    ))}
+                  </div>
+                </aside>
+              </div>
+            </section>
+          )}
+
           {activeTab === "report" && (
             <section className="report-page">
               <div className="page-title-row">
@@ -605,6 +930,7 @@ export default function Home() {
         <NavButton active={activeTab === "chat"} icon="◌" label="Assistant" onClick={() => goTo("chat")} />
         <NavButton active={activeTab === "timeline"} icon="≡" label="Timeline" onClick={() => goTo("timeline")} />
         <button className="mobile-add" onClick={() => setLogOpen(true)} aria-label="Add symptom update">＋</button>
+        <NavButton active={activeTab === "forum"} icon="◎" label="Community" onClick={() => goTo("forum")} />
         <NavButton active={activeTab === "report"} icon="□" label="Report" onClick={() => goTo("report")} />
       </nav>
 
@@ -646,6 +972,22 @@ export default function Home() {
             ) : (
               <UrgencyResult result={urgencyResult} onAgain={() => setUrgencyResult(null)} />
             )}
+          </section>
+        </div>
+      )}
+
+      {newPostOpen && (
+        <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setNewPostOpen(false); }}>
+          <section className="modal-card" role="dialog" aria-modal="true" aria-labelledby="new-post-title">
+            <button className="close-button" onClick={() => setNewPostOpen(false)} aria-label="Close">×</button>
+            <p className="eyebrow">NEW COMMUNITY POST</p><h2 id="new-post-title">Start a conversation</h2><p>Ask for ideas, share a small win, or connect with parents going through something similar.</p>
+            <form onSubmit={handleNewPost}>
+              <label>Topic<select name="topic" defaultValue="Everyday"><option>Sleep</option><option>Feeding</option><option>Skin</option><option>Development</option><option>Everyday</option></select></label>
+              <label>Post title<input name="title" required placeholder="What would you like to talk about?" /></label>
+              <label>Your post<textarea name="body" required rows={5} placeholder="Add a little context so other parents can help…" /></label>
+              <label className="upload-zone"><span>＋</span><strong>Add photos or videos</strong><small>Images up to 10 MB · videos up to 50 MB</small><input name="media" type="file" accept="image/*,video/*" multiple onChange={validateFiles} /></label>
+              <div className="modal-actions"><button type="button" className="text-button" onClick={() => setNewPostOpen(false)}>Cancel</button><button className="primary-button" type="submit">Publish post</button></div>
+            </form>
           </section>
         </div>
       )}
