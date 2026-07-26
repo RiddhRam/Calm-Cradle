@@ -1,0 +1,27 @@
+[
+  {
+    "id": "look",
+    "promptHint": "Hey, would you mind taking a look at something for me?",
+    "response": "Sure, I’ll take a look. Tell me what you’ve noticed, and add a clear photo if there is something visible on Mila’s skin."
+  },
+  {
+    "id": "details",
+    "promptHint": "I noticed a pink patch on her cheek after her nap.",
+    "response": "Thanks—that timing is useful. I can see the timeline note from yesterday about a small pink patch that had not spread. Is it changing in size, colour, warmth, or texture, and does Mila seem bothered when it is touched?"
+  },
+  {
+    "id": "image",
+    "promptHint": "Here is a photo. What do you notice?",
+    "response": "I can help describe what is visible, but I can’t diagnose it from a photo. The area appears localized and pink. Your recent notes say Mila is feeding normally and waking easily, which is helpful context. A clinician should assess it if it spreads, becomes swollen, develops blisters, or is accompanied by fever or a change in how Mila acts."
+  },
+  {
+    "id": "watch",
+    "promptHint": "What should I watch for tonight?",
+    "response": "Tonight, watch whether the patch spreads quickly, whether swelling develops around the eyes or mouth, and whether Mila has trouble breathing, becomes unusually sleepy, feeds much less, or has fewer wet diapers. Call emergency services for breathing trouble, blue lips, or difficulty waking her. Otherwise, use the urgency check if anything changes."
+  },
+  {
+    "id": "summary",
+    "promptHint": "Can you summarize this for her doctor?",
+    "response": "Yes. I would summarize it this way: localized pink patch on Mila’s left cheek first noticed after a nap; no recorded spreading; feeding and wet diapers remain normal; she wakes easily and is playful; temperature was 37.4°C underarm in the most recent entry. You can download the full doctor report from the Report tab."
+  }
+]
