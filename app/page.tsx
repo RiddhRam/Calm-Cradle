@@ -579,7 +579,7 @@ export default function Home() {
     if (!text || chatBusy) return;
     const responseStartedAt = Date.now();
     const waitForMinimumBuffer = async () => {
-      const remaining = 2000 - (Date.now() - responseStartedAt);
+      const remaining = 1000 - (Date.now() - responseStartedAt);
       if (remaining > 0) await new Promise((resolve) => window.setTimeout(resolve, remaining));
     };
     const userMessage: ChatMessage = {
