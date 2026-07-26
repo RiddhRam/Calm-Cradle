@@ -460,7 +460,6 @@ export default function Home() {
           <BrandMark />
           <div>
             <strong>CalmCradle</strong>
-            <span>Infant symptom support</span>
           </div>
         </div>
         <nav aria-label="Primary navigation">
