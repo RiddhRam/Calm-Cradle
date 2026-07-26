@@ -305,13 +305,13 @@ h2 { font-family: Georgia, "Times New Roman", serif; margin: 0; font-weight: 500
 .graph-dates time { position: relative; flex: 1; padding-bottom: 8px; text-align: center; font-size: 10px; }
 .graph-dates time i { position: absolute; left: 50%; bottom: 0; width: 1px; height: 5px; background: #bcc7c0; }
 .graph-lanes { display: grid; gap: 10px; }
-.graph-lane { display: flex; align-items: center; min-height: 76px; padding: 8px 16px 8px 14px; border: 1px solid #e1e8e3; border-radius: 15px; background: linear-gradient(90deg, #f0f7f3 0, #fbfdfb 34%, #fff 100%); box-shadow: 0 3px 12px rgba(47, 73, 63, .04); }
-.graph-lane.temperature { background: linear-gradient(90deg, #fff1ed 0, #fffaf8 34%, #fff 100%); }
-.graph-lane.skin { background: linear-gradient(90deg, #fff0f3 0, #fff9fa 34%, #fff 100%); }
-.graph-lane.feeding { background: linear-gradient(90deg, #fff8e7 0, #fffdf7 34%, #fff 100%); }
-.graph-lane.sleep { background: linear-gradient(90deg, #f0f3fc 0, #fafbfe 34%, #fff 100%); }
-.graph-lane.breathing { background: linear-gradient(90deg, #ecf8f7 0, #f8fcfb 34%, #fff 100%); }
-.graph-lane.other { background: linear-gradient(90deg, #f5f2ed 0, #fbfaf8 34%, #fff 100%); }
+.graph-lane { display: flex; align-items: center; min-height: 76px; padding: 8px 16px 8px 14px; border: 1px solid #cadbd2; border-radius: 15px; background: linear-gradient(90deg, #dceee5 0, #edf7f1 48%, #f5faf7 100%); box-shadow: 0 3px 12px rgba(47, 73, 63, .05); }
+.graph-lane.temperature { border-color: #e7b6aa; background: linear-gradient(90deg, #f7d8d0 0, #fae5df 48%, #fdf1ed 100%); }
+.graph-lane.skin { border-color: #deb4bf; background: linear-gradient(90deg, #f3d5dd 0, #f8e3e8 48%, #fceff2 100%); }
+.graph-lane.feeding { border-color: #e1c675; background: linear-gradient(90deg, #f3e3ab 0, #f8edc8 48%, #fcf5df 100%); }
+.graph-lane.sleep { border-color: #b5c1e2; background: linear-gradient(90deg, #dbe2f7 0, #e8ecfa 48%, #f2f4fc 100%); }
+.graph-lane.breathing { border-color: #a6cec9; background: linear-gradient(90deg, #cee8e5 0, #def1ee 48%, #edf8f6 100%); }
+.graph-lane.other { border-color: #cfc3b5; background: linear-gradient(90deg, #e6ddd2 0, #efe8df 48%, #f7f3ed 100%); }
 .graph-lane-label { display: flex; align-items: center; gap: 10px; padding-right: 14px; }
 .graph-lane-label > span { display: grid; place-items: center; width: 32px; height: 32px; flex: 0 0 32px; border-radius: 10px; background: rgba(255,255,255,.82); color: var(--green-dark); font-size: 17px; box-shadow: 0 2px 7px rgba(47, 73, 63, .08); }
 .graph-lane-label strong { display: block; color: #43534b; font-size: 12px; font-weight: 750; line-height: 1.2; }
