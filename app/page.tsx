@@ -2,7 +2,7 @@
 
 import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
-type Tab = "today" | "timeline" | "chat" | "report";
+type Tab = "chat" | "timeline" | "report";
 type Urgency = "monitor" | "soon" | "emergency";
 
 type MediaItem = {
@@ -206,7 +206,7 @@ function BrandMark() {
 }
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<Tab>("today");
+  const [activeTab, setActiveTab] = useState<Tab>("chat");
   const [data, setData] = useState<AppData>(fallbackData);
   const [hydrated, setHydrated] = useState(false);
   const [logOpen, setLogOpen] = useState(false);
@@ -464,9 +464,8 @@ export default function Home() {
           </div>
         </div>
         <nav aria-label="Primary navigation">
-          <NavButton active={activeTab === "today"} icon="⌂" label="Today" onClick={() => goTo("today")} />
+          <NavButton active={activeTab === "chat"} icon="◌" label="Assistant" onClick={() => goTo("chat")} />
           <NavButton active={activeTab === "timeline"} icon="≡" label="Timeline" onClick={() => goTo("timeline")} />
-          <NavButton active={activeTab === "chat"} icon="◌" label="Ask AI" onClick={() => goTo("chat")} />
           <NavButton active={activeTab === "report"} icon="□" label="Doctor report" onClick={() => goTo("report")} />
         </nav>
         <div className="privacy-note">
@@ -485,7 +484,7 @@ export default function Home() {
 
       <section className="workspace">
         <header className="topbar">
-          <button className="mobile-brand" onClick={() => goTo("today")} aria-label="Go to Today">
+          <button className="mobile-brand" onClick={() => goTo("chat")} aria-label="Go to Assistant">
             <BrandMark /><span>Infant Symptom Support</span>
           </button>
           <div className="top-actions">
@@ -497,69 +496,6 @@ export default function Home() {
         </header>
 
         <div className="content">
-          {activeTab === "today" && (
-            <>
-              <section className="welcome-row">
-                <div>
-                  <p className="eyebrow">{new Date().toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" })}</p>
-                  <h1>Good morning, TestUser.</h1>
-                  <p>Mila’s latest notes look steady. You’re doing a thoughtful job keeping track.</p>
-                </div>
-                <button className="primary-button desktop-only" onClick={() => setLogOpen(true)}><span>＋</span> Add an update</button>
-              </section>
-
-              <section className="hero-card">
-                <div className="hero-orb"><span>♡</span></div>
-                <div className="hero-copy">
-                  <div className="hero-title-row">
-                    <h2>Mila’s week at a glance</h2>
-                    <span className="soft-pill">3 updates this week</span>
-                  </div>
-                  <p>Her latest entry notes that feeding remained normal and the skin redness had not spread.</p>
-                  <div className="hero-actions">
-                    <button className="light-button" onClick={() => goTo("timeline")}>View timeline <span>→</span></button>
-                    <button className="text-button" onClick={() => goTo("chat")}>Ask about these changes</button>
-                  </div>
-                </div>
-              </section>
-
-              <div className="dashboard-grid">
-                <section className="status-card">
-                  <div className="card-heading">
-                    <div><p className="eyebrow">LATEST SAFETY CHECK</p><h2>Monitoring at home</h2></div>
-                    <span className="status-dot">✓</span>
-                  </div>
-                  <p className="muted">Based on the last recorded check. Continue watching how Mila feeds, breathes, wakes, and behaves.</p>
-                  <div className="watch-list">
-                    <strong>Get help sooner if you notice</strong>
-                    <span><i>!</i> Trouble breathing or blue lips</span>
-                    <span><i>!</i> Difficult to wake or unusually floppy</span>
-                    <span><i>!</i> Rapidly spreading rash or facial swelling</span>
-                  </div>
-                  <button className="outline-button" onClick={() => { setUrgencyResult(null); setUrgencyOpen(true); }}>Check urgency now</button>
-                </section>
-
-                <section className="ask-card">
-                  <div className="assistant-avatar">✦</div>
-                  <p className="eyebrow">YOUR SUPPORT ASSISTANT</p>
-                  <h2>What’s on your mind?</h2>
-                  <p>Talk through a new concern or ask about something in Mila’s timeline.</p>
-                  <button className="chat-prompt" onClick={() => { goTo("chat"); setChatInput("Hey, would you mind taking a look at something for me?"); }}>
-                    <span>Ask anything about Mila…</span><b>→</b>
-                  </button>
-                  <p className="tiny-note">Not a diagnosis · For emergencies, call 911</p>
-                </section>
-              </div>
-
-              <section className="recent-section">
-                <div className="section-heading"><div><p className="eyebrow">RECENT ACTIVITY</p><h2>Mila’s timeline</h2></div><button className="text-button" onClick={() => goTo("timeline")}>See all updates →</button></div>
-                <div className="timeline-list compact">
-                  {data.timeline.slice(0, 3).map((entry) => <TimelineCard key={entry.id} entry={entry} />)}
-                </div>
-              </section>
-            </>
-          )}
-
           {activeTab === "timeline" && (
             <section className="page-panel">
               <div className="page-title-row">
@@ -580,11 +516,15 @@ export default function Home() {
           )}
 
           {activeTab === "chat" && (
-            <section className="chat-layout">
+            <section className="chat-layout chat-home">
               <div className="chat-main">
                 <div className="chat-header">
                   <div className="assistant-avatar">✦</div>
-                  <div><p className="eyebrow">ASK ABOUT MILA</p><h1>Your support assistant</h1><p>Can reference {data.timeline.length} timeline updates and your recent conversations.</p></div>
+                  <div>
+                    <p className="eyebrow">MILA · 5 MONTHS</p>
+                    <h1>What’s on your mind?</h1>
+                    <p>Talk through a new concern or ask about something that has changed over time.</p>
+                  </div>
                 </div>
                 <div className="context-strip"><span>⌁</span><p><strong>Timeline connected</strong> Recent symptoms and selected images can be considered in this conversation.</p></div>
                 <div className="messages" aria-live="polite">
@@ -615,12 +555,25 @@ export default function Home() {
                 </div>
               </div>
               <aside className="chat-context">
-                <p className="eyebrow">RECENT CONTEXT</p>
-                <h2>What I can look back on</h2>
+                <div className="mila-summary">
+                  <span className="avatar">M</span>
+                  <div><p className="eyebrow">TODAY</p><h2>Mila’s context</h2><small>{data.timeline.length} updates available to the assistant</small></div>
+                </div>
+                <div className="home-status">
+                  <span className="status-dot">✓</span>
+                  <div><small>LATEST SAFETY CHECK</small><strong>Monitoring at home</strong></div>
+                </div>
+                <div className="context-actions">
+                  <button className="primary-button" onClick={() => setLogOpen(true)}>＋ Add an update</button>
+                  <button className="outline-button" onClick={() => { setUrgencyResult(null); setUrgencyOpen(true); }}>Check urgency</button>
+                </div>
+                <div className="context-heading">
+                  <p className="eyebrow">RECENT TIMELINE</p>
+                  <button onClick={() => goTo("timeline")}>See all →</button>
+                </div>
                 {data.timeline.slice(0, 3).map((entry) => (
                   <div className="context-item" key={entry.id}><span className={`entry-icon ${entry.tone}`}>{entry.icon}</span><div><strong>{entry.title}</strong><small>{formatEntryDate(entry.observedAt)}</small></div></div>
                 ))}
-                <button className="outline-button" onClick={() => goTo("timeline")}>Open full timeline</button>
               </aside>
             </section>
           )}
@@ -659,10 +612,9 @@ export default function Home() {
       </section>
 
       <nav className="bottom-nav" aria-label="Mobile navigation">
-        <NavButton active={activeTab === "today"} icon="⌂" label="Today" onClick={() => goTo("today")} />
+        <NavButton active={activeTab === "chat"} icon="◌" label="Assistant" onClick={() => goTo("chat")} />
         <NavButton active={activeTab === "timeline"} icon="≡" label="Timeline" onClick={() => goTo("timeline")} />
         <button className="mobile-add" onClick={() => setLogOpen(true)} aria-label="Add symptom update">＋</button>
-        <NavButton active={activeTab === "chat"} icon="◌" label="Ask AI" onClick={() => goTo("chat")} />
         <NavButton active={activeTab === "report"} icon="□" label="Report" onClick={() => goTo("report")} />
       </nav>
 
