@@ -89,7 +89,7 @@ const sampleTimeline: TimelineEntry[] = [
     id: "sample-feeding",
     category: "Feeding concern",
     title: "Morning bottle",
-    note: "Finished her usual 120 mL bottle. Alert and smiling afterward.",
+    note: "Finished his usual 120 mL bottle. Alert and smiling afterward.",
     observedAt: "2026-07-26T07:40:00",
     intensity: "mild",
     icon: "🍼",
@@ -100,7 +100,7 @@ const sampleTimeline: TimelineEntry[] = [
     id: "sample-rash",
     category: "Rash or skin change",
     title: "Skin redness",
-    note: "Small pink patch on her left cheek after her nap. It has not spread and does not seem to bother her.",
+    note: "Small pink patch on his left cheek after his nap. It has not spread and does not seem to bother him.",
     observedAt: "2026-07-25T20:15:00",
     intensity: "moderate",
     icon: "🩹",
@@ -135,25 +135,25 @@ const sampleChats: ChatMessage[] = [
   {
     id: "chat-1",
     role: "user",
-    text: "Mila’s cheek looks a little pink after her nap. She seems comfortable—what should I keep an eye on?",
+    text: "Theo’s cheek looks a little pink after his nap. He seems comfortable—what should I keep an eye on?",
     time: "Yesterday · 8:24 PM",
   },
   {
     id: "chat-2",
     role: "assistant",
-    text: "It’s reassuring that she seems comfortable and the area has not spread. Add a clear photo if you can, and watch for fast spreading, swelling around the eyes or mouth, breathing changes, fever, unusual sleepiness, or feeding changes. Those signs would mean getting medical help sooner.",
+    text: "It’s reassuring that he seems comfortable and the area has not spread. Add a clear photo if you can, and watch for fast spreading, swelling around the eyes or mouth, breathing changes, fever, unusual sleepiness, or feeding changes. Those signs would mean getting medical help sooner.",
     time: "Yesterday · 8:24 PM",
   },
   {
     id: "chat-3",
     role: "user",
-    text: "Her feeding and wet diapers are still normal.",
+    text: "His feeding and wet diapers are still normal.",
     time: "Yesterday · 8:26 PM",
   },
   {
     id: "chat-4",
     role: "assistant",
-    text: "That context is helpful. I’ve noted that feeding and hydration are unchanged. Keep tracking the patch and how Mila is acting overall, and use the urgency check if anything changes.",
+    text: "That context is helpful. I’ve noted that feeding and hydration are unchanged. Keep tracking the patch and how Theo is acting overall, and use the urgency check if anything changes.",
     time: "Yesterday · 8:26 PM",
   },
 ];
@@ -289,6 +289,14 @@ const DB_NAME = "infant-symptom-support";
 const STORE_NAME = "local-records";
 const APP_KEY = "mila-profile";
 
+function updateInfantName(value: string) {
+  return value
+    .replaceAll("SOPHIE", "THEO")
+    .replaceAll("Sophie", "Theo")
+    .replaceAll("MILA", "THEO")
+    .replaceAll("Mila", "Theo");
+}
+
 function openDatabase(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, 1);
@@ -389,12 +397,18 @@ export default function Home() {
         if (stored) {
           setData({
             ...stored,
+            chats: stored.chats.map((message) => sampleChats.find((sample) => sample.id === message.id) ?? { ...message, text: updateInfantName(message.text) }),
             timeline: stored.timeline.map((entry) => ({
               ...entry,
+              note: sampleTimeline.find((sample) => sample.id === entry.id)?.note ?? updateInfantName(entry.note),
               icon: (categoryMeta[entry.category] ?? categoryMeta.Other).icon,
               intensity: entry.intensity ?? (entry.id === "sample-rash" ? "moderate" : "mild"),
             })),
-            forumPosts: stored.forumPosts ?? sampleForumPosts,
+            forumPosts: (stored.forumPosts ?? sampleForumPosts).map((post) => ({
+              ...post,
+              babyAge: updateInfantName(post.babyAge),
+              replies: post.replies.map((reply) => ({ ...reply, babyAge: updateInfantName(reply.babyAge) })),
+            })),
           });
         }
         else return writeStoredData(fallbackData);
@@ -465,7 +479,7 @@ export default function Home() {
     setData((current) => ({ ...current, timeline: [entry, ...current.timeline] }));
     setSelectedEntryId(entry.id);
     setLogOpen(false);
-    setToast("Symptom update saved to Mila’s timeline.");
+    setToast("Symptom update saved to Theo’s timeline.");
     event.currentTarget.reset();
   }
 
@@ -488,7 +502,7 @@ export default function Home() {
       id: crypto.randomUUID(),
       author: "You",
       initials: "YO",
-      babyAge: "Mila · 5 months",
+      babyAge: "Theo · 5 months",
       title: String(form.get("title")).trim(),
       body: String(form.get("body")).trim(),
       topic: String(form.get("topic")) as ForumPost["topic"],
@@ -513,7 +527,7 @@ export default function Home() {
       id: crypto.randomUUID(),
       author: "You",
       initials: "YO",
-      babyAge: "Mila · 5 months",
+      babyAge: "Theo · 5 months",
       body: String(form.get("body")).trim(),
       createdAt: new Date().toISOString(),
       media: mediaFromForm(form),
@@ -643,7 +657,7 @@ export default function Home() {
     doc.text("CalmCradle · Infant Symptom Summary", margin, 64);
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.text("Prepared for Mila · 5 months old", margin, 84);
+    doc.text("Prepared for Theo · 5 months old", margin, 84);
     doc.text(`Generated ${new Date().toLocaleDateString("en-CA", { dateStyle: "long" })}`, margin, 101);
     y = 150;
     doc.setTextColor(37, 48, 44);
@@ -686,7 +700,7 @@ export default function Home() {
       8.5,
       13,
     );
-    doc.save("mila-symptom-summary.pdf");
+    doc.save("theo-symptom-summary.pdf");
     setToast("Doctor report downloaded.");
   }
 
@@ -733,7 +747,7 @@ export default function Home() {
             <BrandMark /><span>CalmCradle</span>
           </button>
           <div className="top-actions">
-            <button className="avatar-button" onClick={() => setSettingsOpen(true)} aria-label="Open settings">M</button>
+            <button className="avatar-button" onClick={() => setSettingsOpen(true)} aria-label="Open settings">T</button>
           </div>
         </header>
 
@@ -741,7 +755,7 @@ export default function Home() {
           {activeTab === "timeline" && (
             <section className="page-panel">
               <div className="page-title-row">
-                <div><p className="eyebrow">SYMPTOM HISTORY</p><h1>Mila’s timeline</h1><p>See when symptoms appeared, how noticeable they felt, and what changed over time.</p></div>
+                <div><p className="eyebrow">SYMPTOM HISTORY</p><h1>Theo’s timeline</h1><p>See when symptoms appeared, how noticeable they felt, and what changed over time.</p></div>
                 <button className="primary-button" onClick={() => setLogOpen(true)}><span>＋</span> Add an update</button>
               </div>
               <div className="timeline-toolbar">
@@ -778,7 +792,7 @@ export default function Home() {
                 <div className="chat-header">
                   <div className="assistant-avatar">✦</div>
                   <div>
-                    <p className="eyebrow">MILA · 5 MONTHS</p>
+                    <p className="eyebrow">THEO · 5 MONTHS</p>
                     <h1>What’s on your mind?</h1>
                     <p>Talk through a new concern or ask about something that has changed over time.</p>
                   </div>
@@ -805,7 +819,7 @@ export default function Home() {
                     <label className="attach-button" aria-label="Attach an image">
                       <span>＋</span><input type="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={(event) => setChatImage(event.target.files?.[0] ?? null)} />
                     </label>
-                    <textarea value={chatInput} onChange={(event) => setChatInput(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void sendChat(); } }} placeholder="Ask anything about Mila…" rows={1} aria-label="Message" />
+                    <textarea value={chatInput} onChange={(event) => setChatInput(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); void sendChat(); } }} placeholder="Ask anything about Theo…" rows={1} aria-label="Message" />
                     <button className="send-button" onClick={() => void sendChat()} disabled={!chatInput.trim() || chatBusy} aria-label="Send message">↑</button>
                   </div>
                   <p>Educational support only. This assistant cannot diagnose your infant.</p>
@@ -813,8 +827,8 @@ export default function Home() {
               </div>
               <aside className="chat-context">
                 <div className="mila-summary">
-                  <span className="avatar">M</span>
-                  <div><p className="eyebrow">TODAY</p><h2>Mila’s context</h2><small>{data.timeline.length} updates available to the assistant</small></div>
+                  <span className="avatar">T</span>
+                  <div><p className="eyebrow">TODAY</p><h2>Theo’s context</h2><small>{data.timeline.length} updates available to the assistant</small></div>
                 </div>
                 <div className="home-status">
                   <span className="status-dot">✓</span>
@@ -941,7 +955,7 @@ export default function Home() {
               </div>
               <div className="report-layout">
                 <article className="report-paper">
-                  <div className="report-top"><div><p className="eyebrow">INFANT SYMPTOM SUMMARY</p><h2>Mila</h2><span>5 months old · Generated today</span></div><BrandMark /></div>
+                  <div className="report-top"><div><p className="eyebrow">INFANT SYMPTOM SUMMARY</p><h2>Theo</h2><span>5 months old · Generated today</span></div><BrandMark /></div>
                   <div className="report-alert"><span>i</span><p><strong>Caregiver-prepared summary</strong>This document organizes observations and does not provide a diagnosis.</p></div>
                   <ReportSection number="01" title="At a glance">
                     <p>Recent notes describe a localized pink patch on the left cheek. Feeding, wet diapers, alertness, and behavior have remained normal in the recorded entries.</p>
@@ -981,7 +995,7 @@ export default function Home() {
             <form onSubmit={handleNewLog}>
               <label>Symptom or observation<select name="category" defaultValue="Rash or skin change">{symptomOptions.map((option) => <option key={option}>{option}</option>)}</select></label>
               <label>Short title<input name="title" placeholder="e.g. Pink patch on cheek" /></label>
-              <label>What happened?<textarea name="note" required rows={4} placeholder="Describe what you noticed and how Mila was acting…" /></label>
+              <label>What happened?<textarea name="note" required rows={4} placeholder="Describe what you noticed and how Theo was acting…" /></label>
               <label>How noticeable was it?<select name="intensity" defaultValue="mild"><option value="mild">Mild</option><option value="moderate">Moderate</option><option value="significant">Significant</option></select></label>
               <label>When did you notice it?<input name="observedAt" type="datetime-local" defaultValue="2026-07-26T09:15" /></label>
               <label className="upload-zone"><span>＋</span><strong>Add photos or videos</strong><small>Images up to 10 MB · videos up to 50 MB</small><input name="media" type="file" accept="image/*,video/*" multiple onChange={validateFiles} /></label>
@@ -997,14 +1011,14 @@ export default function Home() {
             <button className="close-button" onClick={() => setUrgencyOpen(false)} aria-label="Close">×</button>
             {!urgencyResult ? (
               <>
-                <p className="eyebrow">DEMONSTRATION SAFETY CHECK</p><h2 id="urgency-title">Let’s check what Mila needs</h2><p>Answer based on what you see right now. These prototype rules are not clinically validated.</p>
+                <p className="eyebrow">DEMONSTRATION SAFETY CHECK</p><h2 id="urgency-title">Let’s check what Theo needs</h2><p>Answer based on what you see right now. These prototype rules are not clinically validated.</p>
                 <form onSubmit={evaluateUrgency}>
                   <label>What is the main concern?<select name="category">{symptomOptions.map((option) => <option key={option}>{option}</option>)}</select></label>
                   <label>Temperature in °C, if measured<input name="temperature" type="number" step="0.1" placeholder="e.g. 37.4" /></label>
-                  <YesNo name="breathing" label="Is Mila struggling to breathe or are her lips blue?" />
-                  <YesNo name="wake" label="Is she very difficult to wake or unusually floppy?" />
-                  <YesNo name="seizure" label="Has she had a seizure?" />
-                  <YesNo name="feeding" label="Is she refusing several feeds or vomiting repeatedly?" />
+                  <YesNo name="breathing" label="Is Theo struggling to breathe or are his lips blue?" />
+                  <YesNo name="wake" label="Is he very difficult to wake or unusually floppy?" />
+                  <YesNo name="seizure" label="Has he had a seizure?" />
+                  <YesNo name="feeding" label="Is he refusing several feeds or vomiting repeatedly?" />
                   <YesNo name="wetDiapers" label="Are there far fewer wet diapers than usual?" />
                   <button className="primary-button full-button" type="submit">Show next step</button>
                 </form>
@@ -1036,7 +1050,7 @@ export default function Home() {
         <div className="modal-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setSettingsOpen(false); }}>
           <section className="modal-card settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title">
             <button className="close-button" onClick={() => setSettingsOpen(false)} aria-label="Close">×</button>
-            <div className="profile-large"><span className="avatar">M</span><div><p className="eyebrow">INFANT PROFILE</p><h2 id="settings-title">Mila</h2><p>Born February 14, 2026 · 5 months old</p></div></div>
+            <div className="profile-large"><span className="avatar">T</span><div><p className="eyebrow">INFANT PROFILE</p><h2 id="settings-title">Theo</h2><p>Born February 14, 2026 · 5 months old</p></div></div>
             <div className="settings-block"><strong>Local privacy</strong><p>Symptoms, chats, images, and videos are stored only in this browser. Selected text and images are sent to the assistant when you start a chat.</p></div>
             <button className="outline-button full-button" onClick={resetSampleData}>Restore sample profile</button>
             <button className="danger-button" onClick={deleteAllData}>Delete all local records</button>
@@ -1170,7 +1184,7 @@ function UrgencyResult({ result, onAgain }: { result: Urgency; onAgain: () => vo
       label: "Monitor at home",
       icon: "✓",
       intro: "Nothing you selected triggered a higher-level action in this demonstration check.",
-      action: "Keep recording changes and check again if Mila seems different.",
+      action: "Keep recording changes and check again if Theo seems different.",
       watch: ["Trouble breathing or blue lips", "Difficult to wake or unusually floppy", "Feeding much less or far fewer wet diapers"],
     },
     soon: {
