@@ -411,6 +411,16 @@ function BrandMark() {
 }
 
 export default function Home() {
+  if (true) {
+    return (
+      <main style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: "24px", background: "#f5f3ee", color: "#26352e" }}>
+        <section style={{ maxWidth: "520px", textAlign: "center", padding: "40px", borderRadius: "20px", background: "#ffffff", boxShadow: "0 12px 40px rgba(38, 53, 46, 0.08)" }}>
+          <h1 style={{ margin: 0, fontSize: "30px" }}>This site is offline</h1>
+          <p style={{ margin: "12px 0 0", color: "#65736c", lineHeight: 1.6 }}>This private prototype has been taken down.</p>
+        </section>
+      </main>
+    );
+  }
   const [activeTab, setActiveTab] = useState<Tab>("chat");
   const [data, setData] = useState<AppData>(fallbackData);
   const [hydrated, setHydrated] = useState(false);
