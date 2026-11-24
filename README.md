@@ -1,98 +1,39 @@
-# vinext-starter
+# CalmCradle
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+CalmCradle is a very simple MVP built for the **TECL2500 course at York University**. It explores a way for caregivers to organize infant symptom observations, talk through concerns, and prepare a summary for a doctor visit.
 
-## Prerequisites
+This is a course prototype, not a clinically validated medical tool.
 
-- Node.js `>=22.13.0`
+## How it works
 
-## Quick Start
+- **Timeline:** record symptoms, notes, photos, and videos, then view changes over time.
+- **Chat:** ask questions with recent timeline entries, conversation history, and an optional image as context.
+- **Community demo:** explore sample posts and add posts or replies locally; this is not a shared, multi-user forum.
+- **Report:** export observations as a PDF for a doctor visit.
+
+The app uses React and TypeScript, with Next.js APIs running through vinext and a Cloudflare Worker. Records and uploaded media persist in the browser using IndexedDB; the MVP does not use a server database. Chat context and the selected image are sent to the configured AI provider when live AI is enabled.
+
+## Chat UI and response sources
+
+The chat UI is decoupled from the source of assistant messages. It sends requests to `/api/chat` and renders a common `{ reply: string }` response, without needing to know which provider produced the text.
+
+The server currently tries **OpenAI**, then **Anthropic**, when their API keys are configured. If neither is configured, or both fail, it returns a local sample response from `data/demo-responses.json`. Sample replies follow a fixed sequence for demonstrations rather than answering the actual message.
+
+Another vendor can be added behind the same API contract without changing the chat UI. The current implementation returns complete replies as JSON; it does **not** stream tokens. Token streaming would require a transport change.
+
+## Run locally
+
+Requires Node.js **22.13.0 or newer**.
 
 ```bash
-npm install
+npm ci
 npm run dev
-npm run build
 ```
 
-This starter does not use `wrangler.jsonc`.
+Open the local URL printed in the terminal. No API key is needed for the scripted demo. To enable live AI, copy `.env.example` to `.env.local` and configure one or both provider keys. Keep keys out of Git.
 
-## Included Shape
+## Demo
 
-- edit site code under `app/`
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
+Sending a message and receiving a local scripted sample response (no API key required):
 
-## Workspace Auth Headers
-
-OpenAI workspace sites can read the current user's email from
-`oai-authenticated-user-email`.
-
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
-
-Treat the full name as optional and fall back to email when it is absent:
-
-```tsx
-import { headers } from "next/headers";
-
-export default async function Home() {
-  const requestHeaders = await headers();
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
-```
-
-## Optional Dispatch-Owned ChatGPT Sign-In
-
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
-
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
-
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
-
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
-
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
-
-## Useful Commands
-
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
-- `npm run db:generate`: generate Drizzle migrations after schema changes
-
-## Learn More
-
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+https://github.com/user-attachments/assets/8b0a751b-402f-497c-bfe2-bac4513fcad6
